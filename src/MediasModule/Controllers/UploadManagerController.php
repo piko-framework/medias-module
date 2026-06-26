@@ -6,6 +6,7 @@ use PDO;
 use Nette\Utils\Image;
 use Piko;
 use Piko\User;
+use Piko\I18n;
 use Piko\HttpException;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
@@ -15,7 +16,7 @@ class UploadManagerController extends \Piko\Controller
 {
     public $layout = false;
 
-    public function __construct(private PDO $db, User $user)
+    public function __construct(private PDO $db, private I18n $i18n, User $user)
     {
         if (!$user->can('admin')) {
             throw new HttpException(403, 'Not authorized.');
@@ -47,7 +48,7 @@ class UploadManagerController extends \Piko\Controller
         $uploads = $this->request->getUploadedFiles();
 
         if (empty($uploads)) {
-            return $this->jsonResponse(['error' => 'Aucun fichier transmis.'])->withStatus(400);
+            return $this->jsonResponse(['error' => $this->i18n->translate('medias', 'No file uploaded')])->withStatus(400);
         }
 
         $savedFiles = [];
@@ -60,12 +61,12 @@ class UploadManagerController extends \Piko\Controller
             $fileTo = $dest_dir . '/' . $originalName;
 
             if ($size <= 0) {
-                return $this->jsonResponse(['error' => 'Fichier vide.'])->withStatus(400);
+                return $this->jsonResponse(['error' => $this->i18n->translate('medias', 'Empty file')])->withStatus(400);
             }
 
             if ($size > $this->module->maxFileSize) {
                 return $this->jsonResponse([
-                    'error' => sprintf('Fichier trop volumineux (max %s).', $this->formatBytes($this->module->maxFileSize))
+                    'error' => $this->i18n->translate('medias', 'File too large (max {max-size})', ['max-size' => $this->formatBytes($this->module->maxFileSize)]),
                 ])->withStatus(400);
             }
 
@@ -109,7 +110,7 @@ class UploadManagerController extends \Piko\Controller
         $json = json_decode($raw, true);
 
         if (!is_array($json) || !isset($json['id']) || !is_string($json['id'])) {
-            return $this->jsonResponse(['error' => 'Payload invalide: id requis.'])->withStatus(400);
+            return $this->jsonResponse(['error' => $this->i18n->translate('medias', 'Invalid payload: id is required')])->withStatus(400);
         }
 
         $changes = $json['changes'] ?? [];
@@ -182,7 +183,7 @@ class UploadManagerController extends \Piko\Controller
 
     protected function invalidMethod(): ResponseInterface
     {
-        return $this->jsonResponse(['error' => 'Méthode non autorisée.'])->withStatus(405);
+        return $this->jsonResponse(['error' => $this->i18n->translate('medias', 'Unauthorized method')])->withStatus(405);
     }
 
     protected function getFileInfo(Media $media): array
