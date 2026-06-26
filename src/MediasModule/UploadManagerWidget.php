@@ -3,7 +3,6 @@
 namespace Piko\MediasModule;
 
 use Piko\View;
-use app\modules\medias\UploadManagerBundle;
 
 class UploadManagerWidget
 {
