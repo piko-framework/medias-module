@@ -1,0 +1,11 @@
+
+CREATE TABLE IF NOT EXISTS media (
+  `id` INTEGER PRIMARY KEY AUTOINCREMENT,
+  `category` TEXT NOT NULL,
+  `ref_id` INTEGER NOT NULL,
+  `type` TEXT NOT NULL,
+  `name` TEXT NOT NULL,
+  `description` TEXT,
+  `path` TEXT NOT NULL,
+  `order` INTEGER NOT NULL DEFAULT 0
+);

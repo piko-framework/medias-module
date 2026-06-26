@@ -1,0 +1,85 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Medias module CLI interface
+ *
+ * To get help : medias-module --help
+ *
+ * This file is part of the Piko medias module
+ *
+ * @package Piko\MediasModule
+ * @copyright 2026 Sylvain PHILIP.
+ * @license LGPL-3.0; see LICENSE.txt
+ * @link https://github.com/piko-framework/user-module
+ */
+
+use GetOpt\GetOpt;
+use GetOpt\Command;
+use GetOpt\Option;
+
+use Piko\MediasModule\Commands\AbstractCommand;
+
+if (isset($GLOBALS['_composer_autoload_path'])) {
+    require $GLOBALS['_composer_autoload_path'];
+}
+
+function getPDO(): PDO
+{
+    $username = getenv('DB_USERNAME') ? getenv('DB_USERNAME') : null;
+    $password = getenv('DB_PASSWORD') ? getenv('DB_PASSWORD') : null ;
+    try {
+        $pdo = new PDO(getenv('DSN'), $username, $password);
+        // Test the connection (optional: simple query)
+        $pdo->query('SELECT 1');
+    } catch (PDOException $e) {
+        fwrite(STDERR, "Database connection failed: " . $e->getMessage() . "\n");
+        exit(1);
+    }
+
+    return $pdo;
+}
+
+$workingDir = getcwd();
+
+if (file_exists($workingDir . '/env.php')) {
+    foreach (require $workingDir . '/env.php' as $key => $val) {
+        putenv("{$key}={$val}");
+    }
+}
+
+$getopt = new GetOpt([
+    Option::create('h', 'help')->setDescription('Displays help')
+]);
+
+$getopt->addCommands([
+    Command::create('setup:install', '\Piko\UserModule\Commands\SetupCommand::install')->setDescription('Install the media table in your database'),
+]);
+
+$getopt->process();
+
+/** @var Command $command */
+$command = $getopt->getCommand();
+
+if ($getopt->getOption('h')) {
+    echo $getopt->getHelpText();
+    exit(0);
+}
+
+if (!$command) {
+    echo "No command given.\n";
+    echo $getopt->getHelpText();
+    exit(0);
+
+} else {
+
+    list ($class, $method) = explode('::', $command->getHandler());
+
+    /** @var AbstractCommand $controller */
+    $controller = new $class();
+    $pdo = getPDO();
+    $controller->setPDO($pdo);
+
+    $code = (int) call_user_func([$controller, $method], $getopt->getOptions());
+
+    exit($code);
+}

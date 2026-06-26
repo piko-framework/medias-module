@@ -1,0 +1,38 @@
+{
+    "name": "piko/medias-module",
+    "description": "Piko medias management module.",
+    "keywords": [
+        "medias",
+        "piko",
+        "upload-manager",
+        "module"
+    ],
+    "license": "LGPL-3.0",
+    "require": {
+        "piko/db-record": "^2.0",
+        "piko/framework": "^3.4",
+        "piko/i18n": "^2.1",
+        "piko/user": "^2.0",
+        "ulrichsg/getopt-php": "^4.0",
+        "nette/utils": "^4.1",
+        "piko/asset-bundle": "^2.0"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.5",
+        "codeception/codeception": "^5.3",
+        "codeception/module-phpbrowser": "*",
+        "codeception/module-asserts": "*",
+        "codeception/module-db": "^3.2"
+    },
+    "bin": ["bin/user-module"],
+    "scripts": {
+        "tests": "phpunit",
+        "coding-standard": "phpcs --standard=vendor/piko/core/coding-standard  --extensions=php --ignore='*/(vendor|views|messages|tests)/*,/env.php' .",
+        "coding-standard-fix": "phpcbf --standard=vendor/piko/core/coding-standard  --extensions=php --ignore='*/(vendor|views|messages|tests)/*,/env.php' ."
+    },
+    "autoload": {
+        "psr-4": {
+            "Piko\\": "src"
+        }
+    }
+}
