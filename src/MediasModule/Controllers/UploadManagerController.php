@@ -33,8 +33,8 @@ class UploadManagerController extends \Piko\Controller
 {
     public function __construct(private PDO $db, private I18n $i18n, User $user)
     {
-        $this->on(BeforeActionEvent::class, function (BeforeActionEvent $event) {
-            if (!$this->user->can($this->module->managePermission)) {
+        $this->on(BeforeActionEvent::class, function (BeforeActionEvent $event) use ($user) {
+            if (!$user->can($this->module->managePermission)) {
                 throw new HttpException(403, 'Not authorized.');
             }
         });
