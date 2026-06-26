@@ -37,6 +37,13 @@ class MediasModule extends \Piko\Module
     public int $maxFileSize = 5242880; // 5 * 1024 * 1024 = 5Mo
 
     /**
+     * Module management permission
+     *
+     * @var string
+     */
+    public string $managePermission = 'manage.medias';
+
+    /**
      * Thumbnail quality from 0 to 100
      *
      * @var integer

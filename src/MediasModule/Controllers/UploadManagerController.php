@@ -19,6 +19,7 @@ use Piko;
 use Piko\User;
 use Piko\I18n;
 use Piko\HttpException;
+use Piko\Controller\Event\BeforeActionEvent;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 use Piko\MediasModule\Models\Media;
@@ -32,9 +33,11 @@ class UploadManagerController extends \Piko\Controller
 {
     public function __construct(private PDO $db, private I18n $i18n, User $user)
     {
-        if (!$user->can('admin')) {
-            throw new HttpException(403, 'Not authorized.');
-        }
+        $this->on(BeforeActionEvent::class, function (BeforeActionEvent $event) {
+            if (!$this->user->can($this->module->managePermission)) {
+                throw new HttpException(403, 'Not authorized.');
+            }
+        });
     }
 
     public function listAction(int $ref_id = 0, string $category = 'image'): ResponseInterface
