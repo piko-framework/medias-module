@@ -23,6 +23,14 @@ use Nette\Utils\ImageType;
  */
 class MediasModule extends \Piko\Module
 {
+
+    /**
+     * Controller namespace
+     *
+     * @var string
+     */
+    public $controllerNamespace = 'Piko\\MediasModule\\Controllers';
+
     /**
      * Maximum alowed size to upload a file
      *
