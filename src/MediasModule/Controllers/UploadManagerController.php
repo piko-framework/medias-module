@@ -15,7 +15,6 @@ namespace Piko\MediasModule\Controllers;
 
 use Exception;
 use PDO;
-use Nette\Utils\Image;
 use Piko;
 use Piko\User;
 use Piko\I18n;
@@ -220,7 +219,11 @@ class UploadManagerController extends \Piko\Controller
         $thumbnailUrl = '';
 
         if ($media->type == 'image') {
-            $thumbnailUrl = $this->getThumbnail($media);
+            $view = $this->getView();
+            /**
+             * @var \Piko\View&\Piko\MediasModule\Contracts\ThumbnailBehaviorInterface $view
+             */
+            $thumbnailUrl = $view->getThumbnail($media->path);
         }
 
         return [
@@ -232,19 +235,6 @@ class UploadManagerController extends \Piko\Controller
             'caption' => $media->caption,
             'order' => $media->sort_order,
         ];
-    }
-
-    protected function getThumbnail(Media $media, int $width = 80, int $height = 60): string
-    {
-        $thumb = 'thumbnails/' . $width . 'x' . $height . '-' . $media->id . '-' . $media->name;
-
-        if (!file_exists(Piko::getAlias('@webroot/' . $thumb))) {
-            $img = Image::fromFile(Piko::getAlias($media->path));
-            $img->resize($width, $height, Image::Cover);
-            $img->save(Piko::getAlias('@webroot/' . $thumb));
-        }
-
-        return Piko::getAlias('@web/' . $thumb);
     }
 
     protected function normalizeFileName(string $name): string

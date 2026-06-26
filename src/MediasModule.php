@@ -13,8 +13,7 @@ declare(strict_types=1);
 
 namespace Piko;
 
-use Nette\Utils\Image;
-use Nette\Utils\ImageType;
+use Piko\MediasModule\Behaviors\ViewBehaviors;
 
 /**
  * Medias Module class
@@ -23,7 +22,6 @@ use Nette\Utils\ImageType;
  */
 class MediasModule extends \Piko\Module
 {
-
     /**
      * Controller namespace
      *
@@ -38,6 +36,13 @@ class MediasModule extends \Piko\Module
      */
     public int $maxFileSize = 5242880; // 5 * 1024 * 1024 = 5Mo
 
+    /**
+     * Thumbnail quality from 0 to 100
+     *
+     * @var integer
+     */
+    public int $thumbnailQuality = 97;
+
     public function bootstrap(): void
     {
         $i18n =  $this->application->getComponent('Piko\I18n');
@@ -47,29 +52,7 @@ class MediasModule extends \Piko\Module
         $view = $this->application->getComponent('Piko\View');
         assert($view instanceof View);
 
-        $view->attachBehavior('getThumbnail', function ($file, $width = 80, $height = 60, $type = 'jpg') {
-            $file = \Piko::getAlias($file);
-
-            if (!file_exists($file)) {
-                return '';
-            }
-
-            $thumb = 'thumbnails/' . md5_file($file) . '-' . $width . 'x' . $height . '.' . $type;
-
-            if (!file_exists(\Piko::getAlias('@webroot/' . $thumb))) {
-
-                $imgType = match ($type) {
-                    'avif' => ImageType::AVIF,
-                    'webp' => ImageType::WEBP,
-                    default => ImageType::JPEG
-                };
-
-                $img = Image::fromFile($file);
-                $img->resize($width, $height, Image::Cover);
-                $img->save(\Piko::getAlias('@webroot/' . $thumb), null, $imgType);
-            }
-
-            return \Piko::getAlias('@web/' . $thumb);
-        });
+        $viewBehaviors = new ViewBehaviors($this->thumbnailQuality);
+        $view->attachBehavior('getThumbnail', [$viewBehaviors, 'getThumbnail']);
     }
 }
