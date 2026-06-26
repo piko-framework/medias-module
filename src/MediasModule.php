@@ -41,7 +41,7 @@ class MediasModule extends \Piko\Module
      *
      * @var integer
      */
-    public int $thumbnailQuality = 97;
+    public int $thumbnailQuality = 85;
 
     public function bootstrap(): void
     {
