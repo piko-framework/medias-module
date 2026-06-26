@@ -1,4 +1,5 @@
 <?php
+
 namespace Piko\MediasModule\Controllers;
 
 use Exception;
@@ -35,7 +36,7 @@ class UploadManagerController extends \Piko\Controller
         return $this->jsonResponse(['files' => $files]);
     }
 
-    public function uploadAction(int $ref_id = 0, string $category = 'image', string $dest_dir = '@webroot/medias') : ResponseInterface
+    public function uploadAction(int $ref_id = 0, string $category = 'image', string $dest_dir = '@webroot/medias'): ResponseInterface
     {
         if ($this->request->getMethod() !== 'POST') {
             return $this->invalidMethod();
@@ -94,7 +95,7 @@ class UploadManagerController extends \Piko\Controller
             $savedFiles[] = $media;
         }
 
-        return $this->jsonResponse( [
+        return $this->jsonResponse([
             'id' => $savedFiles[0]->id,
             'file' => $this->getFileInfo($savedFiles[0]),
         ])->withStatus(201);
@@ -122,7 +123,7 @@ class UploadManagerController extends \Piko\Controller
             $media->bind($changes);
             $media->save();
 
-            return $this->jsonResponse( [
+            return $this->jsonResponse([
                 'id' => $media->id,
                 'file' => $this->getFileInfo($media),
             ]);
@@ -198,7 +199,7 @@ class UploadManagerController extends \Piko\Controller
         return [
             'id' => $media->id,
             'name' => $media->name,
-            'size' => file_exists(Piko::getAlias($media->path))? filesize(Piko::getAlias($media->path)) : 0,
+            'size' => file_exists(Piko::getAlias($media->path)) ? filesize(Piko::getAlias($media->path)) : 0,
             'url' => $thumbnailUrl ? $thumbnailUrl : $url,
             'type' => $media->type,
             'caption' => $media->caption,

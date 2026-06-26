@@ -1,4 +1,5 @@
 <?php
+
 namespace Piko\MediasModule;
 
 use Piko\View;
@@ -8,10 +9,10 @@ class UploadManagerWidget
 {
     public static function createUI(View $view, string $id, array $params = []): void
     {
-        $refId = $params['refId']?? 0;
-        $destDir = $params['destDir']?? '@webroot/medias';
-        $category = $params['category']?? '@webroot/medias';
-        $clientOptions = $params['clientOptions']?? [];
+        $refId = $params['refId'] ?? 0;
+        $destDir = $params['destDir'] ?? '@webroot/medias';
+        $category = $params['category'] ?? '@webroot/medias';
+        $clientOptions = $params['clientOptions'] ?? [];
         $uploadEndpoint = $view->getUrl('medias/upload-manager/upload', [
           'ref_id' => $refId,
           'category' => $category,
@@ -45,7 +46,7 @@ class UploadManagerWidget
             }'
         ];
         $clientOptions = array_merge($defaultOptions, $clientOptions);
-        $js = 'const widget = new UploaderWidget("#' . $id .'", ' . json_encode($clientOptions, JSON_PRETTY_PRINT) . ');';
+        $js = 'const widget = new UploaderWidget("#' . $id . '", ' . json_encode($clientOptions, JSON_PRETTY_PRINT) . ');';
         $view->registerJs("\nwindow.addEventListener('DOMContentLoaded', () => {\n$js\n});");
         UploadManagerBundle::register($view);
     }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Piko;
 
 // use Piko;
@@ -18,22 +19,21 @@ class MediasModule extends \Piko\Module
         $view = $this->application->getComponent('Piko\View');
         assert($view instanceof View);
 
-        $view->attachBehavior('getThumbnail', function ($file, $width = 80, $height = 60, $type = 'jpg')
-        {
+        $view->attachBehavior('getThumbnail', function ($file, $width = 80, $height = 60, $type = 'jpg') {
             $file = \Piko::getAlias($file);
 
             if (!file_exists($file)) {
                 return '';
             }
 
-            $thumb = 'thumbnails/' . md5_file($file) . '-' .  $width . 'x' . $height . '.' . $type;
+            $thumb = 'thumbnails/' . md5_file($file) . '-' . $width . 'x' . $height . '.' . $type;
 
             if (!file_exists(\Piko::getAlias('@webroot/' . $thumb))) {
 
-                $imgType = match($type) {
-                  'avif' => ImageType::AVIF,
-                  'webp' => ImageType::WEBP,
-                  default => ImageType::JPEG
+                $imgType = match ($type) {
+                    'avif' => ImageType::AVIF,
+                    'webp' => ImageType::WEBP,
+                    default => ImageType::JPEG
                 };
 
                 $img = Image::fromFile($file);

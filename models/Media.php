@@ -1,4 +1,5 @@
 <?php
+
 namespace app\modules\medias\models;
 
 use PDO;
@@ -122,11 +123,11 @@ class Media extends DbRecord
         $sth = $db->prepare($query);
 
         if (!empty($filters['ref_id'])) {
-            $sth->bindParam(':ref_id', $filters['ref_id'] , PDO::PARAM_INT);
+            $sth->bindParam(':ref_id', $filters['ref_id'], PDO::PARAM_INT);
         }
 
         if (!empty($filters['category'])) {
-            $sth->bindParam(':category', $filters['category'] , PDO::PARAM_STR);
+            $sth->bindParam(':category', $filters['category'], PDO::PARAM_STR);
         }
 
         $sth->execute();

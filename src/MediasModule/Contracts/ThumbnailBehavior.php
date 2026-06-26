@@ -1,4 +1,5 @@
 <?php
+
 namespace Piko\MediasModule\Contracts;
 
 interface ThumbnailBehavior

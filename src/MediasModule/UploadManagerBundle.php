@@ -1,9 +1,10 @@
 <?php
+
 namespace Piko\MediasModule;
 
 use Piko\AssetBundle;
 
-class UploadManagerBundle extends  AssetBundle
+class UploadManagerBundle extends AssetBundle
 {
     public $name = 'upload-manager';
 
