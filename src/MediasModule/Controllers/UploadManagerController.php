@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of the Piko user module
+ *
+ * @package Piko\MediasModule
+ * @copyright 2026 Sylvain PHILIP.
+ * @license LGPL-3.0; see LICENSE.txt
+ * @link https://github.com/piko-framework/medias-module
+ */
+
 declare(strict_types=1);
 
 namespace Piko\MediasModule\Controllers;
@@ -13,12 +22,15 @@ use Piko\I18n;
 use Piko\HttpException;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
-use app\modules\medias\models\Media;
+use Piko\MediasModule\Models\Media;
 
+/**
+ * Upload Manager controller
+ *
+ * @author Sylvain PHILIP <contact@sphilip.com>
+ */
 class UploadManagerController extends \Piko\Controller
 {
-    public $layout = false;
-
     public function __construct(private PDO $db, private I18n $i18n, User $user)
     {
         if (!$user->can('admin')) {
@@ -38,8 +50,11 @@ class UploadManagerController extends \Piko\Controller
         return $this->jsonResponse(['files' => $files]);
     }
 
-    public function uploadAction(int $ref_id = 0, string $category = 'image', string $dest_dir = '@webroot/medias'): ResponseInterface
-    {
+    public function uploadAction(
+        int $ref_id = 0,
+        string $category = 'image',
+        string $dest_dir = '@webroot/medias'
+    ): ResponseInterface {
         if ($this->request->getMethod() !== 'POST') {
             return $this->invalidMethod();
         }
@@ -51,7 +66,9 @@ class UploadManagerController extends \Piko\Controller
         $uploads = $this->request->getUploadedFiles();
 
         if (empty($uploads)) {
-            return $this->jsonResponse(['error' => $this->i18n->translate('medias', 'No file uploaded')])->withStatus(400);
+            return $this->jsonResponse([
+                'error' => $this->i18n->translate('medias', 'No file uploaded')
+            ])->withStatus(400);
         }
 
         $savedFiles = [];
@@ -64,12 +81,16 @@ class UploadManagerController extends \Piko\Controller
             $fileTo = $dest_dir . '/' . $originalName;
 
             if ($size <= 0) {
-                return $this->jsonResponse(['error' => $this->i18n->translate('medias', 'Empty file')])->withStatus(400);
+                return $this->jsonResponse([
+                    'error' => $this->i18n->translate('medias', 'Empty file')
+                ])->withStatus(400);
             }
 
             if ($size > $this->module->maxFileSize) {
                 return $this->jsonResponse([
-                    'error' => $this->i18n->translate('medias', 'File too large (max {max-size})', ['max-size' => $this->formatBytes($this->module->maxFileSize)]),
+                    'error' => $this->i18n->translate('medias', 'File too large (max {max-size})', [
+                    'max-size' => $this->formatBytes($this->module->maxFileSize)
+                    ]),
                 ])->withStatus(400);
             }
 
@@ -113,7 +134,9 @@ class UploadManagerController extends \Piko\Controller
         $json = json_decode($raw, true);
 
         if (!is_array($json) || !isset($json['id']) || !is_string($json['id'])) {
-            return $this->jsonResponse(['error' => $this->i18n->translate('medias', 'Invalid payload: id is required')])->withStatus(400);
+            return $this->jsonResponse([
+                'error' => $this->i18n->translate('medias', 'Invalid payload: id is required')
+            ])->withStatus(400);
         }
 
         $changes = $json['changes'] ?? [];
@@ -186,7 +209,9 @@ class UploadManagerController extends \Piko\Controller
 
     protected function invalidMethod(): ResponseInterface
     {
-        return $this->jsonResponse(['error' => $this->i18n->translate('medias', 'Unauthorized method')])->withStatus(405);
+        return $this->jsonResponse([
+            'error' => $this->i18n->translate('medias', 'Unauthorized method')
+        ])->withStatus(405);
     }
 
     protected function getFileInfo(Media $media): array

@@ -1,6 +1,17 @@
 <?php
 
-namespace app\modules\medias\models;
+/**
+ * This file is part of the Piko user module
+ *
+ * @package Piko\MediasModule
+ * @copyright 2026 Sylvain PHILIP.
+ * @license LGPL-3.0; see LICENSE.txt
+ * @link https://github.com/piko-framework/medias-module
+ */
+
+declare(strict_types=1);
+
+namespace Piko\MediasModule\Models;
 
 use PDO;
 use Piko;
@@ -10,10 +21,14 @@ use Piko\DbRecord\Attribute\Column;
 
 /**
  * This is the model class for table "media".
+ *
+ * @author Sylvain PHILIP <contact@sphilip.com>
  */
 #[Table(name:'media')]
 class Media extends DbRecord
 {
+    // phpcs:disable
+
     #[Column(primaryKey: true)]
     public ?int $id = null;
 
@@ -43,6 +58,8 @@ class Media extends DbRecord
 
     #[Column]
     public int $sort_order = 0;
+
+    // phpcs:enable
 
     /**
     * Load row data.

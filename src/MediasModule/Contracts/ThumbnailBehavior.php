@@ -1,9 +1,26 @@
 <?php
 
+/**
+ * This file is part of the Piko user module
+ *
+ * @package Piko\MediasModule
+ * @copyright 2026 Sylvain PHILIP.
+ * @license LGPL-3.0; see LICENSE.txt
+ * @link https://github.com/piko-framework/medias-module
+ */
+
 declare(strict_types=1);
 
 namespace Piko\MediasModule\Contracts;
 
+/**
+ * This interface can be used to prevent errors like missing method with LSP
+ *
+ * You can use it like this in your views templates :
+ * `// @var \Piko\View&Piko\MediasModule\Contracts\ThumbnailBehavior $this`
+ *
+ * @author Sylvain PHILIP <contact@sphilip.com>
+ */
 interface ThumbnailBehavior
 {
     /**

@@ -1,13 +1,45 @@
 <?php
 
+/**
+ * This file is part of the Piko user module
+ *
+ * @package Piko\MediasModule
+ * @copyright 2026 Sylvain PHILIP.
+ * @license LGPL-3.0; see LICENSE.txt
+ * @link https://github.com/piko-framework/medias-module
+ */
+
 declare(strict_types=1);
 
 namespace Piko\MediasModule;
 
 use Piko\View;
 
+/**
+ * Upload Manger Widget class
+ *
+ * @author Sylvain PHILIP <contact@sphilip.com>
+ */
 class UploadManagerWidget
 {
+    /**
+     * Builds and registers the upload manager UI widget.
+     *
+     * This method prepares backend endpoints, merges default client options with
+     * user-provided options, then initializes the JavaScript {@code UploaderWidget}
+     * on DOM ready.
+     *
+     * @param View   $view   The view instance used to generate URLs and register JavaScript.
+     * @param string $id     The DOM element ID where the uploader widget will be mounted.
+     * @param array  $params Optional configuration:
+     *                       - refId (int): Related entity identifier (default: 0)
+     *                       - destDir (string): Destination directory for uploads (default: "@webroot/medias")
+     *                       - category (string): Media category (default: "@webroot/medias")
+     *                       - clientOptions (array): Additional/overridden client-side widget options
+     *                         see https://github.com/ilhooq/upload-manager
+     *
+     * @return void
+     */
     public static function createUI(View $view, string $id, array $params = []): void
     {
         $refId = $params['refId'] ?? 0;
@@ -47,7 +79,8 @@ class UploadManagerWidget
             }'
         ];
         $clientOptions = array_merge($defaultOptions, $clientOptions);
-        $js = 'const widget = new UploaderWidget("#' . $id . '", ' . json_encode($clientOptions, JSON_PRETTY_PRINT) . ');';
+        $js = 'const widget = new UploaderWidget("#' . $id . '", '
+            . json_encode($clientOptions, JSON_PRETTY_PRINT) . ');';
         $view->registerJs("\nwindow.addEventListener('DOMContentLoaded', () => {\n$js\n});");
         UploadManagerBundle::register($view);
     }

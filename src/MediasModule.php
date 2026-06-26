@@ -1,15 +1,33 @@
 <?php
 
+/**
+ * This file is part of the Piko user module
+ *
+ * @package Piko\MediasModule
+ * @copyright 2026 Sylvain PHILIP.
+ * @license LGPL-3.0; see LICENSE.txt
+ * @link https://github.com/piko-framework/medias-module
+ */
+
 declare(strict_types=1);
 
 namespace Piko;
 
-// use Piko;
 use Nette\Utils\Image;
 use Nette\Utils\ImageType;
 
+/**
+ * Medias Module class
+ *
+ * @author Sylvain PHILIP <contact@sphilip.com>
+ */
 class MediasModule extends \Piko\Module
 {
+    /**
+     * Maximum alowed size to upload a file
+     *
+     * @var integer
+     */
     public int $maxFileSize = 5242880; // 5 * 1024 * 1024 = 5Mo
 
     public function bootstrap(): void
