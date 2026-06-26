@@ -219,10 +219,8 @@ class UploadManagerController extends \Piko\Controller
         $thumbnailUrl = '';
 
         if (str_starts_with($media->type, 'image')) {
-            $view = $this->getView();
-            /**
-             * @var \Piko\View&\Piko\MediasModule\Contracts\ThumbnailBehaviorInterface $view
-             */
+            /** @var \Piko\View&\Piko\MediasModule\Contracts\ThumbnailBehaviorInterface $view */
+            $view = $this->module->getApplication()->getComponent('Piko\View');
             $thumbnailUrl = $view->getThumbnail($media->path);
         }
 
