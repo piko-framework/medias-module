@@ -218,7 +218,7 @@ class UploadManagerController extends \Piko\Controller
         $url = Piko::getAlias(str_replace('@webroot', '@web', $media->path));
         $thumbnailUrl = '';
 
-        if ($media->type == 'image') {
+        if (str_starts_with($media->type, 'image')) {
             $view = $this->getView();
             /**
              * @var \Piko\View&\Piko\MediasModule\Contracts\ThumbnailBehaviorInterface $view
@@ -230,7 +230,8 @@ class UploadManagerController extends \Piko\Controller
             'id' => $media->id,
             'name' => $media->name,
             'size' => file_exists(Piko::getAlias($media->path)) ? filesize(Piko::getAlias($media->path)) : 0,
-            'url' => $thumbnailUrl ? $thumbnailUrl : $url,
+            'url' => $url,
+            'thumbUrl' => $thumbnailUrl,
             'type' => $media->type,
             'caption' => $media->caption,
             'order' => $media->sort_order,
