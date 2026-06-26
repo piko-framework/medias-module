@@ -106,6 +106,19 @@ class Media extends DbRecord
             $this->updated_at = date('Y-m-d H:i:s');
         }
 
+        if ($insert) {
+            // Determine the next sort order
+            $sql = 'SELECT MAX(sort_order) FROM `' . $this->tableName
+                 . '` WHERE ref_id = :ref_id AND category = :category';
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([
+                ':ref_id' => $this->ref_id,
+                ':category' => $this->category,
+            ]);
+            $order = $stmt->fetchColumn();
+            $this->sort_order = ($order !== false && $order !== null) ? ((int) $order) + 1 : 0;
+        }
+
         return true;
     }
 
