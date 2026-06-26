@@ -79,8 +79,39 @@ class UploadManagerWidget
             }'
         ];
         $clientOptions = array_merge($defaultOptions, $clientOptions);
-        $js = 'const widget = new UploaderWidget("#' . $id . '", '
-            . json_encode($clientOptions, JSON_PRETTY_PRINT) . ');';
+
+        $callbackKeys = [
+            'onReady',
+            'onChange',
+            'onUploadSuccess',
+            'onUploadError',
+            'onFileUpdate',
+            'onFileUpdateError',
+            'onReorder',
+            'onDeleteSuccess',
+            'onDeleteError',
+            'onErrorAddFile'
+        ];
+        $callbacks = [];
+
+        foreach ($callbackKeys as $key) {
+            if (isset($clientOptions[$key]) && is_string($clientOptions[$key])) {
+                $callbacks[$key] = $clientOptions[$key];
+                unset($clientOptions[$key]);
+            }
+        }
+
+        $optionsJson = json_encode($clientOptions, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        $callbacksJs = '';
+
+        foreach ($callbacks as $key => $fnJs) {
+            $callbacksJs .= "options.{$key} = {$fnJs};\n";
+        }
+
+        $js = "const options = {$optionsJson};\n"
+            . $callbacksJs
+            . 'const widget = new UploaderWidget("#' . $id . '", options);';
+
         $view->registerJs("\nwindow.addEventListener('DOMContentLoaded', () => {\n$js\n});");
         UploadManagerBundle::register($view);
     }
